@@ -7,13 +7,15 @@ function saveBookmark(e){
 var siteName = document.getElementById('siteName').value;
 var siteUrl = document.getElementById('siteUrl').value;
 
+//Call form validation
+if(!validateForm(siteName, siteUrl)){
+    return false;
+}
 
 var bookmark ={
     name: siteName,
     url: siteUrl
 }
-
-
 
 //console.log(bookmark);
 /*
@@ -39,15 +41,17 @@ if(localStorage.getItem('bookmarks')=== null){
     //Reset back to localstorage
     localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
 }
+    //Clear form
+    document.getElementById('myForm').reset();
 
      //Re-fetch bookmarks
      fetchBookmarks();
-     
+
     //Prevent form from submitting
     e.preventDefault(); 
 }
 
-//Delet Bookmarks
+//Delete Bookmarks
 function deleteBookmark(url){
     //Get bookmarks from localstorage
     var bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
@@ -89,3 +93,19 @@ function fetchBookmarks(){
     }
 }
 
+//Validate form
+function validateForm(siteName, siteUrl){
+    if(!siteName||!siteUrl){
+        alert('Please fill in the form');
+        return false;
+    }
+    
+    var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    var regex = new RegExp(expression);
+    
+    if (!siteUrl.match(regex)){
+        alert("Please use a valid Url");
+        return false;
+    }
+    return true;
+}
